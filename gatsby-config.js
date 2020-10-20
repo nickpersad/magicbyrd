@@ -3,7 +3,7 @@ module.exports = {
   siteMetadata: {
     title: `Magic Byrd - An IoT Platform for Enabling Smart Products`,
     description: `Magic Byrd Platform offers enterprises a cloud IoT layer & tools to rapidly build Industry 4.0 solutions & applications scaled across millions of items with minimal coding.`,
-    author: `MBk`,
+    author: `Magic Byrd`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
