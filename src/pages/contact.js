@@ -56,6 +56,9 @@ const CustomSelect = ({ label, values, ...props }) => {
 
 const Contact = () => {
   const [active, setActive] = useState(0)
+  const [action, setAction] = useState(0)
+  const [nameState, setNameState] = useState(0)
+
   useEffect(() => {
     document.getElementById("service").addEventListener("click", e => {
       if (e.target.value === "Other") {
@@ -69,87 +72,109 @@ const Contact = () => {
   return (
     <Container>
       <Layout>
-        <div className="wrp">
-          <h1>Feel Free To Contact Us</h1>
-          <Formik
-            initialValues={{
-              name: "",
-              email: "",
-              message: "",
-              service: "",
-              other: "",
-            }}
-            validationSchema={Yup.object({
-              name: Yup.string().required("Required"),
-              email: Yup.string()
-                .email("Invalid email adddress")
-                .required("Required"),
-              service: Yup.string().required("Required"),
-              message: Yup.string().required("Required"),
-            })}
-            onSubmit={async (data, { setSubmitting, resetForm }) => {
-              setSubmitting(true)
-              await addToMailchimp(data.email, {
-                NAME: data.name,
-                MESSAGE: data.message,
-                SERVICE:
-                  data.other !== "" && data.service === "Other"
-                    ? data.other
-                    : data.service,
-              })
-                .then(data => {
-                  console.log(data)
+        {!action ? (
+          <div className="wrp">
+            <h1>Feel Free To Contact Us</h1>
+            <Formik
+              initialValues={{
+                name: "",
+                email: "",
+                message: "",
+                service: "",
+                other: "",
+              }}
+              validationSchema={Yup.object({
+                name: Yup.string().required("Required"),
+                email: Yup.string()
+                  .email("Invalid email adddress")
+                  .required("Required"),
+                service: Yup.string().required("Required"),
+                message: Yup.string().required("Required"),
+              })}
+              onSubmit={async (data, { setSubmitting, resetForm }) => {
+                setSubmitting(true)
+                setNameState(data.name)
+                await addToMailchimp(data.email, {
+                  NAME: data.name,
+                  MESSAGE: data.message,
+                  SERVICE:
+                    data.other !== "" && data.service === "Other"
+                      ? data.other
+                      : data.service,
                 })
-                .catch(() => {})
-              alert("Thanks for contacting us!")
-              resetForm()
-              setSubmitting(false)
-            }}
-          >
-            {props => (
-              <Form>
-                <CustomInput
-                  label="Name"
-                  name="name"
-                  id="name"
-                  type="text"
-                  placeholder="Enter Your Name"
-                />
-                <CustomInput
-                  label="Email"
-                  name="email"
-                  id="email"
-                  placeholder="Enter Your Email"
-                  type=" email"
-                />
-                <CustomSelect
-                  label=" I'm Interested In"
-                  id="service"
-                  name="service"
-                  values={["Sales", "Technical Support", "Security ", "Other"]}
-                />
-                {active ? (
+                  .then(data => {
+                    console.log(data)
+                  })
+                  .catch(() => {})
+                resetForm()
+                setAction(1)
+                setSubmitting(false)
+              }}
+            >
+              {props => (
+                <Form>
                   <CustomInput
-                    label="Other Services"
-                    name="other"
-                    id="other"
+                    label="Name"
+                    name="name"
+                    id="name"
                     type="text"
-                    placeholder="Enter Services"
+                    placeholder="Enter Your Name"
                   />
-                ) : null}
-                <CustomTextarea
-                  label="Message"
-                  is="message"
-                  placeholder="Write Your Message"
-                  name="message"
-                />
-                <button type="submit">
-                  {props.isSubmitting ? "Loading..." : "Submit"}
-                </button>
-              </Form>
-            )}
-          </Formik>
-        </div>
+                  <CustomInput
+                    label="Email"
+                    name="email"
+                    id="email"
+                    placeholder="Enter Your Email"
+                    type=" email"
+                  />
+                  <CustomSelect
+                    label=" I'm Interested In"
+                    id="service"
+                    name="service"
+                    values={[
+                      "Sales",
+                      "Technical Support",
+                      "Security ",
+                      "Other",
+                    ]}
+                  />
+                  {active ? (
+                    <CustomInput
+                      label="Other Services"
+                      name="other"
+                      id="other"
+                      type="text"
+                      placeholder="Enter Services"
+                    />
+                  ) : null}
+                  <CustomTextarea
+                    label="Message"
+                    is="message"
+                    placeholder="Write Your Message"
+                    name="message"
+                  />
+                  <button type="submit">
+                    {props.isSubmitting ? "Loading..." : "Submit"}
+                  </button>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        ) : (
+          <div className="wrp msg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="64"
+              height="64"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.25 16.518l-4.5-4.319 1.396-1.435 3.078 2.937 6.105-6.218 1.421 1.409-7.5 7.626z" />
+            </svg>
+
+            <h2>Thanks!</h2>
+            <p>{`Thank you ${nameState} for contacting us, we will reply as soon as we can!`}</p>
+          </div>
+        )}
       </Layout>
     </Container>
   )
@@ -242,6 +267,29 @@ const Container = styled.div`
     cursor: pointer;
     &:hover {
       background: #736fb7;
+    }
+  }
+  .msg {
+    padding-top: 14em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    svg {
+      fill: #6e66fe;
+    }
+    h2 {
+      font-size: 28px;
+      color: #6e66fe;
+      margin: 1em;
+    }
+    p {
+      font-size: 16px;
+      color: #444;
+      font-weight: 600;
+      max-width: 340px;
+      line-height: 1.6em;
+      text-align: center;
     }
   }
 `
