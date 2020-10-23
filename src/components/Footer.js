@@ -58,7 +58,7 @@ const Footer = () => {
         </div>
         <div className="footer-top-item email">
           <h6>Get in touch</h6>
-          <a href="mailto:nick@magicbyrd.com">nick@magicbyrd.com</a>
+          <a href="mailto:magicbyrd@gmail.com">nick@magicbyrd.com</a>
           <a href="callto:+15618666912">(561) 866-6912</a>
         </div>
       </div>
