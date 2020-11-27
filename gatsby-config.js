@@ -40,7 +40,7 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-plugin-prefetch-google-fonts`,
+      resolve: `gatsby-plugin-google-fonts`,
       options: {
         fonts: [
           {
@@ -52,6 +52,7 @@ module.exports = {
             variants: [`300`, `400`, `500`, `600`, `700`, `800`],
           },
         ],
+        display: 'swap'
       },
     },
     {
